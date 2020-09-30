@@ -3,28 +3,76 @@ import { useEffect, useState} from "react";
 // import './App.css';
 import Movie from "./components/Movie"
 
-const FEATURED_API = "http://www.omdbapi.com/?i=tt3896198&apikey=53157dd"
+// const FEATURED_API = "https://api.themoviedb.org/3/movie/550?api_key=11917ce9d54a485eb07344a9539a872f https://api.themoviedb.org/3/movie/550?api_key=11917ce9d54a485eb07344a9539a872f"
+const FEATURED_API = "https://api.themoviedb.org/3/discover/movie?api_key=11917ce9d54a485eb07344a9539a872f"
+const SEARCH_API = "https://api.themoviedb.org/3/search/movie?&api_key=11917ce9d54a485eb07344a9539a872f&query="
 function App() {
-  const [movies, setMovies] = useState([]);
+  const [movies, setmovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  // useEffect(() => {
+    // fetch(FEATURED_API)
+    // .then(res => res.json())
+    // .then(data => {
+    //   console.log(data);
+    //   setmovies(data.results)
+    // })
+  // }, [])
 
   useEffect(() => {
-    fetch(FEATURED_API).then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      setMovies(data);
-    })
+    getMovies(FEATURED_API);
   }, [])
 
+  const getMovies = (API) =>{
+    fetch(API)
+    .then(res => res.json())
+    .then(data => {
+      setmovies(data.results)
+    })
+  }
 
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    if(searchTerm){    
+      getMovies(SEARCH_API + searchTerm);
+      setSearchTerm("");  
+    }
+    
+    
+  }
+
+
+  const handleOnChange = (e) => {
+    setSearchTerm(e.target.value); 
+  }
   return (
-  <div>{movies.length > 0 && movies.map((movie) => (
-    <Movie/>
-  ))}</div>
+    <>
+      <header>
+        <div className="title">
+          <h2>ReMovie</h2>
+        </div>
+        <div className="searchbar">  
+        <form onSubmit={handleOnSubmit}>
+          <input className="search" 
+          type="search" 
+          placeholder="search..."
+          onChange={handleOnChange}>
+          </input>
+        </form>
+        </div>
+      </header>
+    <div className="movie-container"> 
+      {movies.map((movie) => (
+      <Movie key={movie.id} {...movie}/>
+      ))}
+    </div>
+  </>
   )
 }
 
 export default App;
 
+
+// 'https://api.themoviedb.org/3/discover/movie?api_key=11917ce9d54a485eb07344a9539a872f&primary_release_year=2017&sort_by=revenue.desc'
 // Featured api = "https://api.themoviedb.org/3/discover/movie?
 // sort_by=popularity.desc&apikey=fb7bb23f03b6994dafc674c074d01761&page=1"
 //
@@ -52,3 +100,6 @@ export default App;
 // '06f10fc8741a672af455421c239a1ffc',
 // 'fb7bb23f03b6994dafc674c074d01761',
 // '09ad8ace66eec34302943272db0e8d2c'
+
+
+// My api key == 11917ce9d54a485eb07344a9539a872f
