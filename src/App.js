@@ -40,6 +40,10 @@ function App() {
     
   }
 
+  const showHome = () => {
+    getMovies(FEATURED_API);
+    
+  }
 
   const handleOnChange = (e) => {
     setSearchTerm(e.target.value); 
@@ -47,9 +51,12 @@ function App() {
   return (
     <>
       <header>
-        <div className="title">
+        <li className="title"
+          onClick={showHome}
+        >
           <h2>ReMovie</h2>
-        </div>
+        </li>
+
         <div className="searchbar">  
         <form onSubmit={handleOnSubmit}>
           <input className="search" 
@@ -59,7 +66,9 @@ function App() {
           </input>
         </form>
         </div>
+
       </header>
+
     <div className="movie-container"> 
       {movies.map((movie) => (
       <Movie key={movie.id} {...movie}/>
